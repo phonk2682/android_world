@@ -35,16 +35,20 @@ See demo videos on our [website](https://google-research.github.io/android_world
    1. Download Android Studio [here](https://developer.android.com/studio?gad_source=1&gclid=Cj0KCQjw3ZayBhDRARIsAPWzx8oLcadBD0vAq8xmUutaunLGSzhgEtLz4xVZ_SpV4G0xJazS7LxQkDsaAuveEALw_wcB&gclsrc=aw.ds)
    2. Create an Android Virtual Device (AVD) by following these instructions. For hardware select **Pixel 6**, for System Image select **Tiramisu, API Level 33**, and choose AVD name as **AndroidWorldAvd**. [Watch the setup video.](https://github.com/google-research/android_world/assets/162379927/efc33980-8b36-44be-bb2b-a92d4c334a50)
 
-1. Launch the Android Emulator from the command line
+1. Setup môi trường
 
-    Launch the emulator from the command line, not using the Android Studio UI, with the `-grpc 8554` flag which is needed communication with accessibility forwarding app.
+   1. Thêm ANDROID_HOME, ANDROID_SDK_ROOT vào system variables của windows với giá trị là đường dẫn đến folder Sdk. VD: C:\Users\<username>\AppData\Local\Android\Sdk.
 
-    ```bash
-    # Typically it's located in ~/Android/Sdk/emulator/emulator or
-    # ~/Library/Android/sdk/emulator/emulator
-    EMULATOR_NAME=AndroidWorldAvd # From previous step
-    ~/Library/Android/sdk/emulator/emulator -avd $EMULATOR_NAME -no-snapshot -grpc 8554
-    ```
+   2. Khai báo biến enviroment trong python:
+   ```bash
+   set PATH=%PATH%;%ANDROID_SDK_ROOT%\emulator;%ANDROID_SDK_ROOT%\platform-tools
+   set EMULATOR_NAME=AndroidWorldAvd
+   ```
+   3. Chạy Android Emulator:
+   ```bash
+   emulator -avd %EMULATOR_NAME% -no-snapshot -grpc 8554
+   ```
+
 
 1. [Optional] It's recommended to use `conda`, which you can download [here](https://docs.anaconda.com/free/miniconda/miniconda-install/).
 
@@ -60,16 +64,23 @@ See demo videos on our [website](https://google-research.github.io/android_world
     cd ./android_world
     pip install -r requirements.txt
     python setup.py install
+    cd android_env
+    pip install -e .
+    cd ..
     ```
 
 1. Add model provider APIs as environment variables.
 
     ```bash
     # Add to .bashrc.
-    export OPENAI_API_KEY=your-key
+    export GEMINI_API_KEY=your-key
     export GCP_API_KEY=your-key
     ```
 
+   hoặc thay thẳng vào [android_world/agents/infer.py](https://github.com/phonk2682/android_world/blob/f87d6e40b00b9979fcc4d6d9b1a3d8fc97324658/android_world/agents/infer.py#L116)
+   ```python
+   os.environ['GCP_API_KEY'] = 'gemini_api_key' #set thành gemini api key
+   ```
 1. Install `ffmpeg`, if not already installed.
 
     ```bash
