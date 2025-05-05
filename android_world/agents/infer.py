@@ -113,7 +113,7 @@ class GeminiGcpWrapper(LlmWrapper, MultimodalLlmWrapper):
       enable_safety_checks: bool = True,
   ):
     if 'GCP_API_KEY' not in os.environ:
-      os.environ['GCP_API_KEY'] = 'AIzaSyAPLdwfWrzfA6rgwZqBMVGLBWFXqFiYJuY'
+      os.environ['GCP_API_KEY'] = 'gemini_api_key' #set thành gemini api key
       raise RuntimeError('GCP API key not set.')
     genai.configure(api_key=os.environ['GCP_API_KEY'])
     self.llm = genai.GenerativeModel(
