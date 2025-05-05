@@ -113,6 +113,7 @@ class GeminiGcpWrapper(LlmWrapper, MultimodalLlmWrapper):
       enable_safety_checks: bool = True,
   ):
     if 'GCP_API_KEY' not in os.environ:
+      os.environ['GCP_API_KEY'] = 'AIzaSyAPLdwfWrzfA6rgwZqBMVGLBWFXqFiYJuY'
       raise RuntimeError('GCP API key not set.')
     genai.configure(api_key=os.environ['GCP_API_KEY'])
     self.llm = genai.GenerativeModel(
@@ -260,9 +261,10 @@ class Gpt4Wrapper(LlmWrapper, MultimodalLlmWrapper):
       max_retry: int = 3,
       temperature: float = 0.0,
   ):
-    if 'OPENAI_API_KEY' not in os.environ:
+    if 'GEMINI_API_KEY' not in os.environ:
+      os.environ['GEMINI_API_KEY'] = 'AIzaSyAPLdwfWrzfA6rgwZqBMVGLBWFXqFiYJuY'
       raise RuntimeError('OpenAI API key not set.')
-    self.openai_api_key = os.environ['OPENAI_API_KEY']
+    self.openai_api_key = os.environ['GEMINI_API_KEY']
     if max_retry <= 0:
       max_retry = 3
       print('Max_retry must be positive. Reset it to 3')

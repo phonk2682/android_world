@@ -29,7 +29,7 @@ from absl import flags
 from absl import logging
 from android_world import registry
 from android_world.agents import infer
-from android_world.agents import t3a
+from android_world.agents import t3a, m3a
 from android_world.env import env_launcher
 from android_world.task_evals import task_eval
 
@@ -45,14 +45,13 @@ def _find_adb_directory() -> str:
       os.path.expanduser('~/Library/Android/sdk/platform-tools/adb'),
       os.path.expanduser('~/Android/Sdk/platform-tools/adb'),
   ]
+  potential_paths.append(
+      os.path.join(os.environ.get('ANDROID_HOME', ''), 'platform-tools\\adb.exe')
+  )
   for path in potential_paths:
     if os.path.isfile(path):
       return path
-  raise EnvironmentError(
-      'adb not found in the common Android SDK paths. Please install Android'
-      " SDK and ensure adb is in one of the expected directories. If it's"
-      ' already installed, point to the installed location.'
-  )
+  return 'C:\\Users\\ASUS\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe'
 
 
 _ADB_PATH = flags.DEFINE_string(
@@ -104,11 +103,11 @@ def _main() -> None:
   params = task_type.generate_random_params()
   task = task_type(params)
   task.initialize_task(env)
-  agent = t3a.T3A(env, infer.Gpt4Wrapper('gpt-4-turbo-2024-04-09'))
+  agent = m3a.M3A(env, infer.GeminiGcpWrapper('gemini-2.0-flash'))
 
   print('Goal: ' + str(task.goal))
   is_done = False
-  for _ in range(int(task.complexity * 10)):
+  for _ in range(int(task.complexity * 20)):
     response = agent.step(task.goal)
     if response.done:
       is_done = True
